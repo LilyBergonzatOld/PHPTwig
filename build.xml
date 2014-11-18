@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="PHPTwig" default="deploy">
+    <target name="deploy">
+        <copy todir="${deploydir}" overwrite="true">
+            <fileset dir="${basedir}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="delete">
+        <delete>
+            <fileset dir="${deploydir}">
+                <include name="**/*"/>
+            </fileset>
+        </delete>
+    </target>
+    <target name="reset" depends="delete,deploy" />
+</project>
