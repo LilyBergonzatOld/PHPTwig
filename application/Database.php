@@ -35,9 +35,10 @@ class Database
     {
 
         $sql = "INSERT INTO users (login, password, email) VALUES (?,?,?)";
+        $secured_password = md5($password);
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('sss', $login, md5($password), $email);
+        $stmt->bind_param('sss', $login, $secured_password, $email);
         $stmt->execute();
         if ($stmt->affected_rows == 1) {
             return true;
@@ -56,10 +57,11 @@ class Database
      */
     public function getUserFrom($login, $password)
     {
-        $sql = "SELECT id, login, email FROM users where login = ? AND password = ?";
+        $sql = "SELECT id, login, email FROM users WHERE login = ? AND password = ?";
+        $secured_password = md5($password);
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('ss', $login, md5($password));
+        $stmt->bind_param('ss', $login, $secured_password);
         $stmt->execute();
         $stmt->store_result();
         if ($stmt->num_rows == 1) {
@@ -99,8 +101,9 @@ class Database
         if (isset($_SESSION['user']) && (!empty($_SESSION['user']))) {
 
             $sql = "SELECT id, content, 'date', users_id FROM messages WHERE users_id = ? ORDER BY 'date' ASC";
+            $id = $_SESSION['user']->getId();
             $stmt = $this->db->prepare($sql);
-            $stmt->bind_param('d', $_SESSION['user']->getId());
+            $stmt->bind_param('d', $id);
             $stmt->execute();
             $stmt->store_result();
             if ($stmt->num_rows >= 0) {
