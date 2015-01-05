@@ -1,0 +1,19 @@
+# Activation du module de réécriture
+RewriteEngine On
+
+# Si le fichier demandé est un fichier  régulier
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+
+# OU, si le fichier demandé est un lien Symbolique
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+
+# OU, si le fichier demandé est un repertoire
+RewriteCond %{REQUEST_FILENAME} -d
+# Alors la ressource est livrée telle que
+RewriteRule ^.*$ - [NC,L]
+
+#RewriteRule ^/$ index.php [NC,L]
+RewriteRule ^(.*)$ index.php?action=$1 [NC,L]
+
+# Sinon la requete est redirigé sur index.php
+# RewriteRule ^.*$ index.php [NC,L]
